@@ -78,6 +78,7 @@ O comando de fixtures cria apenas dados demonstrativos seguros para desenvolvime
 | `npm run dev` | Inicia o ambiente local |
 | `npm run collect:fixtures` | Gera o catálogo demonstrativo |
 | `npm run collect` | Executa os conectores configurados pelo mantenedor |
+| `npm run validate:catalog` | Impede a publicação de um catálogo vazio, antigo ou inconsistente |
 | `npm test` | Executa os testes automatizados |
 | `npm run check` | Valida o código com ESLint |
 | `npm run build` | Gera a versão de produção em `dist` |
@@ -88,6 +89,7 @@ Validação recomendada antes de qualquer publicação:
 ```bash
 npm test
 npm run check
+npm run validate:catalog
 npm run build
 npm audit --omit=dev
 ```

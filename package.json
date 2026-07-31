@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "collect": "node collectors/index.mjs",
     "collect:fixtures": "node collectors/fixtures.mjs",
+    "validate:catalog": "node collectors/validate-output.mjs",
     "check": "eslint .",
     "test": "node --test"
   },

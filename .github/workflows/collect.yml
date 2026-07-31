@@ -29,6 +29,8 @@ jobs:
       - name: Garantir processador de imagens
         run: command -v magick || command -v convert || (sudo apt-get update && sudo apt-get install -y imagemagick)
       - run: npm run collect
+      - name: Validar catálogo antes da publicação
+        run: npm run validate:catalog
       - run: npm test
       - run: npm run check
       - run: npm run build

@@ -32,8 +32,9 @@ Depois que todos os endereços estiverem protegidos:
 2. cadastre `CLOUDFLARE_ACCOUNT_ID` e `CLOUDFLARE_API_TOKEN` como GitHub Actions Secrets;
 3. cadastre `CLOUDFLARE_PAGES_PROJECT` como variável do repositório;
 4. execute manualmente o workflow **Coletar e publicar**;
-5. confirme que o workflow passou e que o catálogo continua exigindo autenticação;
-6. só então mantenha as três execuções diárias programadas.
+5. confirme que a validação recusaria um catálogo vazio, demonstrativo, antigo ou inconsistente;
+6. confirme que o workflow passou e que o catálogo continua exigindo autenticação;
+7. só então mantenha as três execuções diárias programadas.
 
 ## 5. Validação posterior
 
