@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.wrangler/
+public/data/jobs.json
+public/data/details/
+public/company-logos/
+public/platform-logos/

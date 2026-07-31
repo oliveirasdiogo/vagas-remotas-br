@@ -1,0 +1,10 @@
+{
+  "lever": [
+    { "site": "ciandt", "company": "CI&T", "logoUrl": "https://lever-client-logos.s3.us-west-2.amazonaws.com/bd60685b-4d32-480d-b133-37e7461f528d-1723638941106.png" },
+    { "site": "loadsmart", "company": "Loadsmart", "logoUrl": "https://lever-client-logos.s3.amazonaws.com/7c8663d8-2d5a-4570-9ad2-a4a34ee9c5b6-1509448858861.png" },
+    { "site": "weloglobal", "company": "Welo Data" },
+    { "site": "Flex", "company": "Flex" },
+    { "site": "binance", "company": "Binance" },
+    { "site": "jobscan-2", "company": "Jobscan", "logoUrl": "https://lever-client-logos.s3.amazonaws.com/9d6218c2-44d4-47ac-9b8e-d3ea8e40bc3a-1553111505123.png" }
+  ]
+}
