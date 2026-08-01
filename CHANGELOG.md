@@ -17,6 +17,8 @@ As mudanças relevantes deste projeto são registradas neste arquivo.
 - A ordenação foi simplificada para **Mais recentes**, **Ordem alfabética** e **Empresas**, com as vagas mais recentes como padrão.
 - Um botão de início foi adicionado ao lado do GitHub para retornar à visão geral e limpar os filtros ativos.
 - O horário original de publicação passou a aparecer nos cards e nos detalhes, convertido para o horário de Brasília a partir da data informada pela fonte.
+- A visualização mobile foi compactada para duas colunas de indicadores, cards menores, margens reduzidas e menu lateral com sobreposição segura, eliminando a rolagem horizontal e o excesso de altura.
+- No mobile, os indicadores passaram a funcionar como uma faixa horizontal de filtros rápidos, ocupando apenas uma linha e mantendo os cards completos no desktop.
 - Logos de empresas e plataformas agora possuem fallback automático para iniciais quando o arquivo estiver ausente ou falhar no navegador.
 - O modal de detalhes foi adaptado aos temas claro e escuro e mantém a candidatura na plataforma original em nova aba segura.
 - Os indicadores **Novas hoje**, **Visualizadas**, **Favoritas** e **Disponíveis** passaram a funcionar como filtros clicáveis e mutuamente exclusivos.
