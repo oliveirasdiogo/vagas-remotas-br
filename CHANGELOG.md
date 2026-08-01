@@ -20,6 +20,7 @@ As mudanças relevantes deste projeto são registradas neste arquivo.
 - A visualização mobile foi compactada para duas colunas de indicadores, cards menores, margens reduzidas e menu lateral com sobreposição segura, eliminando a rolagem horizontal e o excesso de altura.
 - No mobile, os indicadores passaram a funcionar como uma faixa horizontal de filtros rápidos, ocupando apenas uma linha e mantendo os cards completos no desktop.
 - O menu de filtros mobile ganhou fechamento próprio, fundo clicável, bloqueio da rolagem da página e rolagem interna limitada a `100dvh`, evitando sobreposição e conteúdo cortado.
+- O menu mobile passou a usar um cabeçalho interno com fechamento e posicionamento fixo por `top`/`bottom`, corrigindo o recorte observado no Brave para Android e removendo totalmente o acionador externo enquanto aberto.
 - Logos de empresas e plataformas agora possuem fallback automático para iniciais quando o arquivo estiver ausente ou falhar no navegador.
 - O modal de detalhes foi adaptado aos temas claro e escuro e mantém a candidatura na plataforma original em nova aba segura.
 - Os indicadores **Novas hoje**, **Visualizadas**, **Favoritas** e **Disponíveis** passaram a funcionar como filtros clicáveis e mutuamente exclusivos.
