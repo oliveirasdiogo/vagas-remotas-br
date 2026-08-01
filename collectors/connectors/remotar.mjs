@@ -51,6 +51,14 @@ const platformFrom = (value, company = 'Empresa') => {
   } catch { return company.slice(0, 40) }
 }
 const itemDescriptions = (items, predicate = () => true) => [...new Set((items || []).filter(predicate).map(item => structuredText(item?.description || '').slice(0, 500)).filter(Boolean))].slice(0, 40)
+export const formatRemotarSalary = salary => {
+  if (!salary?.from || !Number.isFinite(Number(salary.from))) return null
+  const currency = ['BRL', 'USD', 'EUR'].includes(salary.currency) ? salary.currency : 'BRL'
+  const format = value => new Intl.NumberFormat('pt-BR', { style: 'currency', currency }).format(Number(value) / 100)
+  const range = salary.to && Number(salary.to) !== Number(salary.from) ? `${format(salary.from)} – ${format(salary.to)}` : format(salary.from)
+  const period = ({ monthly: ' / mês', yearly: ' / ano', hourly: ' / hora', daily: ' / dia' })[salary.type] || ''
+  return `${range}${period}`
+}
 const completeDescription = job => {
   const companyAbout = structuredText(job.companyDisplayAbout || job.company?.about || '')
   const featured = (job.jobFeaturedInfos || []).map(item => [item?.title, item?.description].filter(Boolean).join('\n')).join('\n\n')
@@ -64,8 +72,7 @@ export function parseRemotar(job) {
   const company = job.companyDisplayName || job.company?.name || 'Confidencial'
   const category = job.jobCategories?.[0]?.category?.name || 'Outros'
   const tags = [...new Set((job.jobTags || []).map(item => item.tag?.name).filter(Boolean))].slice(0, 10)
-  const salary = job.jobSalary
-  const salaryLabel = salary?.from ? `${salary.currency || 'R$'} ${Number(salary.from).toLocaleString('pt-BR')}${salary.to ? ` – ${salary.currency || 'R$'} ${Number(salary.to).toLocaleString('pt-BR')}` : ''}` : null
+  const salaryLabel = formatRemotarSalary(job.jobSalary)
   const originalUrl = safeExternal(job.externalLink)
   const summary = stripHtml(job.subtitle || '').slice(0, 500) || null
   const description = completeDescription(job)

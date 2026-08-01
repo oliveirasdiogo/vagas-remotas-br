@@ -6,6 +6,7 @@ As mudanças relevantes deste projeto são registradas neste arquivo.
 
 ### Coleta
 
+- Os salários recebidos em centavos da Remotar agora são convertidos corretamente para reais e exibem a periodicidade informada.
 - Todas as vagas passaram a reunir os campos públicos disponíveis na Remotar: apresentação da empresa, descrição, informações adicionais, destaques, requisitos e benefícios, independentemente da plataforma original.
 
 ### Interface

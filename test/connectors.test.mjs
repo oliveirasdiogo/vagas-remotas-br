@@ -5,7 +5,7 @@ import { parseApinfo } from '../collectors/connectors/apinfo.mjs'
 import { parseLever } from '../collectors/connectors/lever.mjs'
 import { parseEmpregare } from '../collectors/connectors/empregare.mjs'
 import { parseSolides } from '../collectors/connectors/solides.mjs'
-import { parseRemotar } from '../collectors/connectors/remotar.mjs'
+import { formatRemotarSalary, parseRemotar } from '../collectors/connectors/remotar.mjs'
 import { safeRemotarThumbnail } from '../collectors/logos.mjs'
 
 test('Trampos aceita vaga remota e ignora vaga presencial', () => {
@@ -67,6 +67,11 @@ test('Remotar reúne todos os campos públicos da vaga independentemente da plat
   const parsed = parseRemotar(base)
   assert.match(parsed.description, /Sobre a empresa[\s\S]*Cultura da empresa[\s\S]*Responsabilidades[\s\S]*Informações adicionais[\s\S]*Processo[\s\S]*Entrevista técnica/)
   assert.deepEqual(parsed.benefits, ['Plano de saúde'])
+})
+
+test('Remotar converte salário em centavos para reais', () => {
+  assert.equal(formatRemotarSalary({ from:416400, to:531900, currency:'BRL', type:'monthly' }), 'R$ 4.164,00 – R$ 5.319,00 / mês')
+  assert.equal(formatRemotarSalary({ from:0, to:0, currency:'BRL', type:'monthly' }), null)
 })
 
 test('Remotar usa a empresa como plataforma para formulário genérico', () => {
