@@ -46,6 +46,8 @@
 .stat.interactive.active span{color:#08796e;font-weight:800}
 .stat.interactive:focus-visible{outline:3px solid rgba(15,143,129,.28);outline-offset:2px}
 .stat.interactive.accent.active{background:#c9f47d;border-color:#86b93b;box-shadow:inset 0 0 0 1px #86b93b}
+.stat.restoreStat{background:#f6f8f7}
+.stat.restoreStat:disabled{cursor:default;opacity:.62;box-shadow:none;border-color:var(--line)}
 .siteFooter{border-top:1px solid var(--line);margin-top:32px;padding:20px 2px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--muted);font-size:12px}
 .siteFooter a{display:inline-flex;align-items:center;gap:7px;color:var(--dark);font-weight:800;text-decoration:none}
 .siteFooter a:hover{color:var(--teal)}
