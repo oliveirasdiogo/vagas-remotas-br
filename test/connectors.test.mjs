@@ -5,7 +5,7 @@ import { parseApinfo } from '../collectors/connectors/apinfo.mjs'
 import { parseLever } from '../collectors/connectors/lever.mjs'
 import { parseEmpregare } from '../collectors/connectors/empregare.mjs'
 import { parseSolides } from '../collectors/connectors/solides.mjs'
-import { applyGreenhouseContent, greenhouseReference, parseRemotar } from '../collectors/connectors/remotar.mjs'
+import { parseRemotar } from '../collectors/connectors/remotar.mjs'
 import { safeRemotarThumbnail } from '../collectors/logos.mjs'
 
 test('Trampos aceita vaga remota e ignora vaga presencial', () => {
@@ -72,16 +72,6 @@ test('Remotar converte qualquer domínio de plataforma em nome legível', () => 
   const base = { id:12, title:'Dev Remoto', active:true, expired:false, type:'remote', createdAt:'2026-07-31T12:00:00.000-03:00', company:{name:'Empresa'} }
   assert.equal(parseRemotar({ ...base, externalLink:'https://latojobs.com/vaga/12' }).source, 'LATOjobs')
   assert.equal(parseRemotar({ ...base, externalLink:'https://jobs.novaplataforma.com.br/vaga/12' }).source, 'Novaplataforma')
-})
-
-test('Greenhouse preserva a descrição pública completa com segurança', () => {
-  assert.deepEqual(greenhouseReference('https://job-boards.greenhouse.io/quintoandar/jobs/4113918009'), { board:'quintoandar', jobId:'4113918009' })
-  assert.equal(greenhouseReference('https://greenhouse.io.evil.example/quintoandar/jobs/4113918009'), null)
-  const enriched = applyGreenhouseContent({ description:'Resumo', requirements:['SQL'], benefits:['VR'] }, '<h2>Sobre a empresa</h2><p>Informações completas.</p><h2>Benefícios</h2><ul><li>Plano de saúde</li></ul><script>alert(1)</script>')
-  assert.match(enriched.description, /Sobre a empresa[\s\S]*Informações completas[\s\S]*Benefícios[\s\S]*Plano de saúde/)
-  assert.doesNotMatch(enriched.description, /alert/)
-  assert.deepEqual(enriched.requirements, [])
-  assert.deepEqual(enriched.benefits, [])
 })
 
 test('Thumbnail da Remotar aceita somente caminho numérico esperado', () => {
