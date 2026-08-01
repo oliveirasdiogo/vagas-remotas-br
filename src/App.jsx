@@ -5,7 +5,8 @@ const safeUrl = value => { try { const url = new URL(value); return url.protocol
 const MS_PER_DAY = 86_400_000
 const jobDate = job => Date.parse(job.publishedAt || job.firstSeenAt || 0)
 const jobAgeDays = job => Math.max(0, Math.floor((Date.now() - jobDate(job)) / MS_PER_DAY))
-const ageLabel = job => { const days = jobAgeDays(job); return days === 0 ? 'Cadastrada hoje' : days === 1 ? 'Cadastrada há 1 dia' : `Cadastrada há ${days} dias` }
+const jobTime = job => new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' }).format(new Date(jobDate(job)))
+const ageLabel = job => { const days = jobAgeDays(job), time = jobTime(job); return days === 0 ? `Cadastrada hoje às ${time}` : days === 1 ? `Cadastrada há 1 dia, às ${time}` : `Cadastrada há ${days} dias, às ${time}` }
 const mark = value => value.split(/\s+/).filter(Boolean).map(word => word[0]).join('').slice(0, 2).toUpperCase()
 const platformClass = name => `platform-${name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '')}`
 const countBy = (items, field) => [...items.reduce((map, item) => map.set(item[field], (map.get(item[field]) || 0) + 1), new Map())].sort((a, b) => b[1] - a[1])
