@@ -62,6 +62,13 @@ test('Remotar não executa HTML recebido na descrição', () => {
   assert.equal(parsed.description, 'React')
 })
 
+test('Remotar reúne todos os campos públicos da vaga independentemente da plataforma', () => {
+  const base = { id:13, title:'Dev Remoto', active:true, expired:false, type:'remote', createdAt:'2026-07-31T12:00:00.000-03:00', externalLink:'https://acme.inhire.app/vagas/abc/dev', company:{name:'Acme', about:'<p>Cultura da empresa</p>', companyJobBenefits:[{description:'Plano de saúde'}]}, description:'<p>Responsabilidades</p>', moreInfos:'<p>Informações adicionais</p>', jobFeaturedInfos:[{title:'Processo', description:'Entrevista técnica'}] }
+  const parsed = parseRemotar(base)
+  assert.match(parsed.description, /Sobre a empresa[\s\S]*Cultura da empresa[\s\S]*Responsabilidades[\s\S]*Informações adicionais[\s\S]*Processo[\s\S]*Entrevista técnica/)
+  assert.deepEqual(parsed.benefits, ['Plano de saúde'])
+})
+
 test('Remotar usa a empresa como plataforma para formulário genérico', () => {
   const job = { id:11, title:'Dev Remoto', active:true, expired:false, type:'remote', createdAt:'2026-07-31T12:00:00.000-03:00', externalLink:'https://docs.google.com/forms/d/e/abc', company:{name:'Empresa Acme'} }
   assert.equal(parseRemotar(job).source, 'Empresa Acme')

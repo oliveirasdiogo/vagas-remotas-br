@@ -53,7 +53,7 @@ export function normalizeJob(input, collectedAt = new Date().toISOString()) {
     originalUrl: externalUrl(input.originalUrl),
     originalPlatform: input.originalPlatform == null ? null : text(input.originalPlatform, 'originalPlatform', 80),
     summary: input.summary == null ? null : text(input.summary, 'summary', 500),
-    description: input.description == null ? null : multilineText(input.description, 'description', 12_000),
+    description: input.description == null ? null : multilineText(input.description, 'description', 50_000),
     benefits: textList(input.benefits, 'benefits'),
     requirements: textList(input.requirements, 'requirements'),
     desirableRequirements: textList(input.desirableRequirements, 'desirableRequirements'),

@@ -51,6 +51,13 @@ const platformFrom = (value, company = 'Empresa') => {
   } catch { return company.slice(0, 40) }
 }
 const itemDescriptions = (items, predicate = () => true) => [...new Set((items || []).filter(predicate).map(item => structuredText(item?.description || '').slice(0, 500)).filter(Boolean))].slice(0, 40)
+const completeDescription = job => {
+  const companyAbout = structuredText(job.companyDisplayAbout || job.company?.about || '')
+  const featured = (job.jobFeaturedInfos || []).map(item => [item?.title, item?.description].filter(Boolean).join('\n')).join('\n\n')
+  const sections = [companyAbout && `Sobre a empresa\n\n${companyAbout}`, job.description, job.moreInfos, featured]
+    .map(structuredText).filter(Boolean)
+  return [...new Set(sections)].join('\n\n').slice(0, 50_000) || null
+}
 
 export function parseRemotar(job) {
   if (!job.id || !job.title || !job.active || job.expired || !['remote', 'hybrid'].includes(job.type)) return null
@@ -61,7 +68,7 @@ export function parseRemotar(job) {
   const salaryLabel = salary?.from ? `${salary.currency || 'R$'} ${Number(salary.from).toLocaleString('pt-BR')}${salary.to ? ` – ${salary.currency || 'R$'} ${Number(salary.to).toLocaleString('pt-BR')}` : ''}` : null
   const originalUrl = safeExternal(job.externalLink)
   const summary = stripHtml(job.subtitle || '').slice(0, 500) || null
-  const description = structuredText(job.description || job.moreInfos || '').slice(0, 12_000) || null
+  const description = completeDescription(job)
   const companyBenefits = job.ignoreCompanyBenefits ? [] : (job.company?.companyJobBenefits || [])
   const benefits = itemDescriptions([...(job.jobBenefits || []), ...companyBenefits])
   const requirements = itemDescriptions(job.jobRequirements, item => item?.mandatory !== false)

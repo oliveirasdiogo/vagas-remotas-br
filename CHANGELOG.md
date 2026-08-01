@@ -4,6 +4,10 @@ As mudanças relevantes deste projeto são registradas neste arquivo.
 
 ## 2026-08-01
 
+### Coleta
+
+- Todas as vagas passaram a reunir os campos públicos disponíveis na Remotar: apresentação da empresa, descrição, informações adicionais, destaques, requisitos e benefícios, independentemente da plataforma original.
+
 ### Interface
 
 - A interface adotou o novo layout em preto, grafite, cinza e branco, com modo escuro como padrão e modo claro de alto contraste.
