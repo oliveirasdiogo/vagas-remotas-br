@@ -10,6 +10,7 @@ As mudanças relevantes deste projeto são registradas neste arquivo.
 
 ### Interface
 
+- Os filtros de área e plataforma agora são derivados apenas das vagas ativas e não ocultas, atualizam suas contagens conforme a modalidade e o outro filtro e descartam automaticamente opções que deixaram de existir após uma coleta.
 - A interface adotou o novo layout em preto, grafite, cinza e branco, com modo escuro como padrão e modo claro de alto contraste.
 - A navegação lateral passou a reunir visão geral, exploração, favoritas, visualizadas e ocultas, com recolhimento responsivo no desktop e painel móvel.
 - GitHub e Feedback foram movidos para o topo da navegação lateral e são ocultados junto com o menu recolhido.

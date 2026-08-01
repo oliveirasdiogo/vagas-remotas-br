@@ -71,24 +71,29 @@ export default function App() {
   useEffect(() => { document.documentElement.dataset.theme = dark ? 'dark' : 'light'; localStorage.setItem('vagas-remotas-br.theme', dark ? 'dark' : 'light') }, [dark])
   useEffect(() => { const overflow = mobile ? 'hidden' : ''; document.body.style.overflow = overflow; document.documentElement.style.overflow = overflow; return () => { document.body.style.overflow = ''; document.documentElement.style.overflow = '' } }, [mobile])
 
+  const availableForFilters = useMemo(() => jobs.filter(job => job.status === 'active' && !hidden.value.has(job.id) && (workMode === 'all' || job.workMode === workMode)), [jobs, hidden.value, workMode])
+  const effectiveSource = source && availableForFilters.some(job => job.source === source) ? source : ''
+  const areas = useMemo(() => countBy(availableForFilters.filter(job => !effectiveSource || job.source === effectiveSource), 'area'), [availableForFilters, effectiveSource])
+  const effectiveArea = area && areas.some(([name]) => name === area) ? area : ''
+  const sources = useMemo(() => countBy(availableForFilters.filter(job => !effectiveArea || job.area === effectiveArea), 'source'), [availableForFilters, effectiveArea])
+
   const visible = useMemo(() => jobs.filter(job => {
     const isHidden = hidden.value.has(job.id)
     if (view === 'hidden' ? !isHidden : isHidden) return false
     if (workMode !== 'all' && job.workMode !== workMode) return false
     if (query && ![job.title, job.company, job.area, job.location, job.source, ...job.tags].join(' ').toLowerCase().includes(query.toLowerCase())) return false
-    if (area && job.area !== area) return false
-    if (source && job.source !== source) return false
+    if (effectiveArea && job.area !== effectiveArea) return false
+    if (effectiveSource && job.source !== effectiveSource) return false
     if (onlyUnseen && visited.value.has(job.id)) return false
     if (view === 'favorites' && !favorites.value.has(job.id)) return false
     if (view === 'visited' && !visited.value.has(job.id)) return false
     if (view === 'new' && jobAgeDays(job) !== 0) return false
     if (view === 'available' && job.status !== 'active') return false
     return true
-  }).sort((a, b) => sort === 'company' ? a.company.localeCompare(b.company, 'pt-BR') : sort === 'title' ? a.title.localeCompare(b.title, 'pt-BR') : jobDate(b) - jobDate(a)), [jobs, hidden.value, workMode, query, area, source, onlyUnseen, view, visited.value, favorites.value, sort])
+  }).sort((a, b) => sort === 'company' ? a.company.localeCompare(b.company, 'pt-BR') : sort === 'title' ? a.title.localeCompare(b.title, 'pt-BR') : jobDate(b) - jobDate(a)), [jobs, hidden.value, workMode, query, effectiveArea, effectiveSource, onlyUnseen, view, visited.value, favorites.value, sort])
 
   const pageSize = 30, totalPages = Math.max(1, Math.ceil(visible.length / pageSize)), currentPage = Math.min(page, totalPages)
   const pagedJobs = visible.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-  const areas = useMemo(() => countBy(jobs, 'area'), [jobs]), sources = useMemo(() => countBy(jobs, 'source'), [jobs])
   const updated = meta.updatedAt ? new Date(meta.updatedAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'carregando…'
   const sectionTitle = ({ overview: 'Vagas recomendadas', explore: 'Explorar todas as vagas', favorites: 'Vagas favoritas', visited: 'Vagas visualizadas', hidden: 'Vagas ocultas', new: 'Vagas cadastradas hoje', available: 'Vagas disponíveis' })[view]
 
@@ -109,7 +114,7 @@ export default function App() {
       {mobile && <div className="mobileMenuHeader"><strong>Filtros</strong><button onClick={() => setMobile(false)} aria-label="Fechar filtros">×</button></div>}
       <div className="sideActions"><button className="homeButton" onClick={goHome} title="Ir para o início" aria-label="Ir para o início"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.7 10.3 12.8 2.9a1.25 1.25 0 0 0-1.6 0l-8.9 7.4a1 1 0 0 0 1.28 1.54L4.5 11v8.25A2.75 2.75 0 0 0 7.25 22h9.5a2.75 2.75 0 0 0 2.75-2.75V11l.92.84a1 1 0 0 0 1.28-1.54ZM14.75 20h-5.5v-6.25c0-.41.34-.75.75-.75h4c.41 0 .75.34.75.75V20Z"/></svg></button><a href="https://github.com/oliveirasdiogo" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="Abrir GitHub"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 .8A11.2 11.2 0 0 0 8.5 22.6c.6.1.8-.3.8-.6v-2.1c-3.4.7-4.1-1.4-4.1-1.4-.5-1.4-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6A4.7 4.7 0 0 1 6.4 8c-.1-.3-.5-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.9.1 3.2a4.7 4.7 0 0 1 1.2 3.3c0 4.6-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2V22c0 .4.2.7.8.6A11.2 11.2 0 0 0 12 .8Z"/></svg></a><button onClick={() => setFeedback(true)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8l-5 3v-3H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/></svg><span>Feedback</span></button></div>
       <div className="navLabel">Navegação</div><nav className="sideNav">{NAV_ITEMS.map(([id, icon, label]) => <button key={id} className={view === id ? 'active' : ''} onClick={() => selectView(id)}><i>{icon}</i><span>{label}</span></button>)}</nav>
-      <div className="sideFilters"><label>Buscar</label><input value={query} onChange={event => { setQuery(event.target.value); setPage(1) }} placeholder="Cargo, empresa, tecnologia"/><label>Área</label><select value={area} onChange={event => { setArea(event.target.value); setPage(1) }}><option value="">Todas as áreas</option>{areas.map(([name]) => <option key={name}>{name}</option>)}</select><label>Plataforma</label><select value={source} onChange={event => { setSource(event.target.value); setPage(1) }}><option value="">Todas as plataformas</option>{sources.map(([name]) => <option key={name}>{name}</option>)}</select><label className="check"><input checked={onlyUnseen} onChange={event => { setOnlyUnseen(event.target.checked); setPage(1) }} type="checkbox"/> Apenas não visualizadas</label></div>
+      <div className="sideFilters"><label>Buscar</label><input value={query} onChange={event => { setQuery(event.target.value); setPage(1) }} placeholder="Cargo, empresa, tecnologia"/><label>Área</label><select value={effectiveArea} onChange={event => { setArea(event.target.value); setPage(1) }}><option value="">Todas as áreas</option>{areas.map(([name]) => <option key={name}>{name}</option>)}</select><label>Plataforma</label><select value={effectiveSource} onChange={event => { setSource(event.target.value); setPage(1) }}><option value="">Todas as plataformas</option>{sources.map(([name]) => <option key={name}>{name}</option>)}</select><label className="check"><input checked={onlyUnseen} onChange={event => { setOnlyUnseen(event.target.checked); setPage(1) }} type="checkbox"/> Apenas não visualizadas</label></div>
       <div className="sideMeta"><span>Última coleta<br/><b>{updated}</b></span><strong>{jobs.length}<small> vagas verificadas</small></strong></div>
     </aside>
     {mobile && <button className="mobileMenuBackdrop" onClick={() => setMobile(false)} aria-label="Fechar menu de filtros"/>}
