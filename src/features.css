@@ -45,6 +45,12 @@
 .stat.interactive.active{background:#dff6f1;border-color:var(--teal);box-shadow:inset 0 0 0 1px var(--teal)}
 .stat.interactive.active span{color:#08796e;font-weight:800}
 .stat.interactive:focus-visible{outline:3px solid rgba(15,143,129,.28);outline-offset:2px}
+.stat.interactive.accent.active{background:#c9f47d;border-color:#86b93b;box-shadow:inset 0 0 0 1px #86b93b}
+.siteFooter{border-top:1px solid var(--line);margin-top:32px;padding:20px 2px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--muted);font-size:12px}
+.siteFooter a{display:inline-flex;align-items:center;gap:7px;color:var(--dark);font-weight:800;text-decoration:none}
+.siteFooter a:hover{color:var(--teal)}
+.siteFooter svg{width:20px;height:20px;flex:none}
+@media(max-width:520px){.siteFooter{align-items:flex-start;flex-direction:column}}
 .logo img{width:100%;height:100%;object-fit:contain;border-radius:50%;display:block;background:#fff}
 .job.seen{background:white;opacity:1;border-color:#94c9bf;box-shadow:inset 4px 0 var(--teal),0 7px 18px rgba(9,27,26,.045)}
 .job.seen .viewed{background:#d6f3ec;color:#08796e;border:1px solid #a8ddd2;padding:4px 8px}
