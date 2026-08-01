@@ -1,4 +1,4 @@
-import { fetchText } from '../http.mjs'
+import { fetchText, mapLimited } from '../http.mjs'
 import { stripHtml } from '../parsing.mjs'
 
 const API_DOMAINS = ['remotar.com.br']
@@ -16,14 +16,49 @@ const iconDomainFrom = value => {
     return PLATFORM_ICON_DOMAINS.find(domain => hostname === domain || hostname.endsWith(`.${domain}`)) || hostname
   } catch { return null }
 }
-const structuredText = value => {
+const decodeEntities = value => value
+  .replace(/&nbsp;|&#160;/gi, ' ').replace(/&amp;/gi, '&').replace(/&quot;/gi, '"')
+  .replace(/&#39;|&apos;/gi, "'").replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+  .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code))).replace(/&#x([\da-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
+
+export const structuredText = value => {
   if (typeof value !== 'string') return ''
-  const spaced = value
+  const spaced = decodeEntities(decodeEntities(value))
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '').replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
     .replace(/<li\b[^>]*>/gi, '\n• ').replace(/<\/(?:p|div|li|h[1-6]|ul|ol)>/gi, '\n\n').replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<[^>]+>/g, '').replace(/&nbsp;|&#160;/gi, ' ').replace(/&amp;/gi, '&').replace(/&quot;/gi, '"')
-    .replace(/&#39;|&apos;/gi, "'").replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+    .replace(/<[^>]+>/g, '')
   return spaced.split('\n').map(line => line.replace(/[ \t]+/g, ' ').trim()).join('\n').replace(/\n{3,}/g, '\n\n').trim()
+}
+
+export const greenhouseReference = value => {
+  try {
+    const url = new URL(value)
+    if (url.hostname !== 'job-boards.greenhouse.io') return null
+    const match = url.pathname.match(/^\/([a-zA-Z0-9_-]+)\/jobs\/(\d+)\/?$/)
+    return match ? { board: match[1], jobId: match[2] } : null
+  } catch { return null }
+}
+
+export const applyGreenhouseContent = (job, content) => {
+  const description = structuredText(content || '').slice(0, 50_000)
+  return description ? { ...job, description, requirements: [], desirableRequirements: [], benefits: [] } : job
+}
+
+async function enrichGreenhouse(jobs) {
+  const groups = new Map()
+  for (const job of jobs) {
+    const reference = greenhouseReference(job.originalUrl)
+    if (reference) groups.set(reference.board, [...(groups.get(reference.board) || []), { job, jobId: reference.jobId }])
+  }
+  await mapLimited([...groups], 3, async ([board, entries]) => {
+    try {
+      const url = `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(board)}/jobs?content=true`
+      const response = JSON.parse(await fetchText(url, { domains: ['boards-api.greenhouse.io'], headers: { accept: 'application/json' } }))
+      const contentById = new Map((response.jobs || []).map(item => [String(item.id), item.content]))
+      for (const entry of entries) Object.assign(entry.job, applyGreenhouseContent(entry.job, contentById.get(entry.jobId)))
+    } catch (error) { console.error(`Greenhouse ${board}: ${error.message}; conteúdo resumido preservado`) }
+  })
+  return jobs
 }
 const platformFrom = (value, company = 'Empresa') => {
   try {
@@ -91,5 +126,5 @@ export async function collectRemotar({ days = 30 } = {}) {
     const newestOnPage = Math.max(...response.data.map(job => Date.parse(job.createdAt)).filter(Number.isFinite))
     if (newestOnPage < cutoff) break
   }
-  return jobs
+  return enrichGreenhouse(jobs)
 }

@@ -12,6 +12,7 @@ test('rejeita credenciais embutidas na URL', () => assert.throws(() => normalize
 test('trata o nome da plataforma apenas como texto', () => assert.equal(normalizeJob({ ...valid, source:'Nova plataforma' }).source, 'Nova plataforma'))
 test('remove caracteres de controle', () => assert.equal(normalizeJob({ ...valid, title:'Analista\u0000 de Dados' }).title, 'Analista de Dados'))
 test('preserva parágrafos seguros na descrição', () => assert.equal(normalizeJob({ ...valid, description:'Sobre a vaga\n\n• React\u0000' }).description, 'Sobre a vaga\n\n• React'))
+test('aceita descrições públicas completas dentro do limite seguro', () => assert.equal(normalizeJob({ ...valid, description:'A'.repeat(20_000) }).description.length, 20_000))
 test('valida benefícios e requisitos como listas de texto', () => {
   const job = normalizeJob({ ...valid, benefits:['Plano de saúde'], requirements:['React'] })
   assert.deepEqual(job.benefits, ['Plano de saúde'])

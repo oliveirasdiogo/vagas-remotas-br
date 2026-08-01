@@ -4,6 +4,10 @@ As mudanças relevantes deste projeto são registradas neste arquivo.
 
 ## 2026-08-01
 
+### Coleta
+
+- Vagas hospedadas no Greenhouse passaram a receber a descrição pública completa diretamente da Job Board API, agrupando consultas por empresa e mantendo fallback para o resumo existente.
+
 ### Interface
 
 - A interface adotou o novo layout em preto, grafite, cinza e branco, com modo escuro como padrão e modo claro de alto contraste.
