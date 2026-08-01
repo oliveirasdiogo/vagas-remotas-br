@@ -22,6 +22,7 @@ Painel open source para acompanhar vagas remotas e híbridas disponíveis para p
 - [Publicação no Cloudflare Pages](#publicação-no-cloudflare-pages)
 - [Proteção e controle de acesso](#proteção-e-controle-de-acesso)
 - [Documentação](#documentação)
+- [Histórico de alterações](#histórico-de-alterações)
 - [Como contribuir](#como-contribuir)
 - [Licença](#licença)
 
@@ -163,6 +164,10 @@ Não configure `Include: Everyone`, permissão baseada somente no método OTP ne
 | [Proteção contra coleta](docs/PROTECAO-CONTRA-COLETA.md) | Bots, rate limiting, Access e validação |
 | [Política de segurança](SECURITY.md) | Controles, limites e relato responsável |
 | [Como contribuir](CONTRIBUTING.md) | Requisitos para contribuições |
+
+## Histórico de alterações
+
+Consulte o [histórico de alterações](CHANGELOG.md) para acompanhar as funcionalidades, correções e melhorias publicadas.
 
 ## Como contribuir
 
