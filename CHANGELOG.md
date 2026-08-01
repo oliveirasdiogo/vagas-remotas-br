@@ -15,6 +15,7 @@ As mudanças relevantes deste projeto são registradas neste arquivo.
 - O cabeçalho foi reduzido para uma identificação compacta do painel, sem repetir título e subtítulo.
 - O projeto recebeu um favicon vetorial próprio, local e sem dependências externas.
 - A ordenação foi simplificada para **Mais recentes**, **Ordem alfabética** e **Empresas**, com as vagas mais recentes como padrão.
+- Um botão de início foi adicionado ao lado do GitHub para retornar à visão geral e limpar os filtros ativos.
 - Logos de empresas e plataformas agora possuem fallback automático para iniciais quando o arquivo estiver ausente ou falhar no navegador.
 - O modal de detalhes foi adaptado aos temas claro e escuro e mantém a candidatura na plataforma original em nova aba segura.
 - Os indicadores **Novas hoje**, **Visualizadas**, **Favoritas** e **Disponíveis** passaram a funcionar como filtros clicáveis e mutuamente exclusivos.
